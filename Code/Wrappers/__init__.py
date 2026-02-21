@@ -1,3 +1,5 @@
+"""Convenience exports for dataset wrappers and utilities."""
+
 from .io import load_dataset, subset_dataset, filter_by_atom_count
 from .splits import random_split_indices, build_splits
 from .baseline import midpoint_baseline

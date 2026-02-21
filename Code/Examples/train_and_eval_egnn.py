@@ -1,3 +1,5 @@
+"""Train and evaluate a simple EGNN baseline on fixed-atom-count reactions."""
+
 import argparse
 import os
 import sys
@@ -23,6 +25,7 @@ from Code.HelperFunctions import EGNN, get_device, to_tensor
 
 
 def parse_args():
+    """Parse CLI arguments for training and evaluation."""
     p = argparse.ArgumentParser()
     p.add_argument("--pkl", required=True, help="Path to train_rpsb_all.pkl")
     p.add_argument("--atom-count", type=int, default=10)
@@ -36,19 +39,23 @@ def parse_args():
 
 
 def main():
+    """Run a small training loop and report baseline metrics."""
     args = parse_args()
     rng = np.random.default_rng(args.seed)
 
+    # Load and filter dataset to a fixed number of atoms for a fair baseline.
     dataset = load_dataset(args.pkl)
     indices = filter_by_atom_count(dataset, args.atom_count)
     dataset_fixed = subset_dataset(dataset, indices)
 
+    # Build train/val/test splits (we only use train/test here).
     n = len(dataset_fixed["reactant"]["positions"])
     split_idx = random_split_indices(n, seed=args.seed)
     splits = build_splits(dataset_fixed, split_idx)
     train = splits["train"]
     test = splits["test"]
 
+    # Initialize model and optimizer.
     device = get_device()
     model = EGNN(node_dim=6, hidden_dim=64).to(device)
     opt = torch.optim.Adam(model.parameters(), lr=args.lr)
@@ -58,13 +65,16 @@ def main():
         order = rng.permutation(train_n)
         losses = []
         for i in order:
+            # Prepare a single training example.
             r_pos = to_tensor(train["reactant"]["positions"][i], device=device)
             p_pos = to_tensor(train["product"]["positions"][i], device=device)
             ts_true = to_tensor(train["transition_state"]["positions"][i], device=device)
 
+            # Concatenate reactant/product positions as node features.
             h = torch.cat([r_pos, p_pos], dim=-1)
             x = r_pos.clone()
 
+            # Predict and optimize MSE against the true TS coordinates.
             opt.zero_grad()
             x_pred, _ = model(x, h)
             loss = torch.mean((x_pred - ts_true) ** 2)
@@ -77,6 +87,7 @@ def main():
     rmsd_model = []
     rmsd_midpoint = []
 
+    # Use mean TS energy as a naive baseline if energies are available.
     if "wB97x_6-31G(d).energy" in train["transition_state"]:
         train_e = train["transition_state"]["wB97x_6-31G(d).energy"]
         mean_energy = float(np.mean(train_e))
@@ -91,6 +102,7 @@ def main():
         ts_true = test["transition_state"]["positions"][i]
 
         with torch.no_grad():
+            # Run model prediction on a single test example.
             r_t = to_tensor(r_pos, device=device)
             p_t = to_tensor(p_pos, device=device)
             h = torch.cat([r_t, p_t], dim=-1)
@@ -98,11 +110,13 @@ def main():
             x_pred, _ = model(x, h)
             ts_pred = x_pred.detach().cpu().numpy()
 
+        # Compare model vs midpoint baseline.
         rmsd_model.append(compute_rmsd(ts_pred, ts_true))
         ts_mid = midpoint_baseline(r_pos, p_pos)
         rmsd_midpoint.append(compute_rmsd(ts_mid, ts_true))
         preds_xyz.append(ts_pred)
 
+        # Optional energy baseline if energies are present.
         if "wB97x_6-31G(d).energy" in test["transition_state"]:
             true_e = float(test["transition_state"]["wB97x_6-31G(d).energy"][i])
             energy_mae.append(compute_energy_mae(mean_energy, true_e))
@@ -112,6 +126,7 @@ def main():
     if energy_mae:
         print(f"energy MAE (mean baseline): {np.mean(energy_mae):.6f}")
 
+    # Write predicted TS structures as XYZ files for inspection.
     write_xyz_dir(args.out_dir, preds_xyz)
     print(f"Wrote XYZ predictions to {args.out_dir}")
 

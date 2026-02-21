@@ -1,0 +1,9 @@
+name: generative-chem
+channels:
+  - pytorch
+  - conda-forge
+dependencies:
+  - python=3.10
+  - numpy
+  - pytorch
+  - ipykernel

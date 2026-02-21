@@ -1,3 +1,5 @@
+"""Convenience exports for helper functions and models."""
+
 from .utils import get_device, to_tensor
 from .egnn import EGNN
 from .flow_matching import FlowMatchingModel, sample_flow_targets

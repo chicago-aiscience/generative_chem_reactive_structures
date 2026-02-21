@@ -1,9 +1,14 @@
+"""Flow-matching model and target construction utilities."""
+
 import torch
 from torch import nn
 
 
 class FlowMatchingModel(nn.Module):
+    """Small MLP that predicts velocity targets for flow-matching."""
+
     def __init__(self, node_dim: int, hidden_dim: int = 64):
+        """Initialize the MLP for per-node velocity prediction."""
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(node_dim * 2 + 1, hidden_dim),
@@ -14,17 +19,23 @@ class FlowMatchingModel(nn.Module):
         )
 
     def forward(self, x_t: torch.Tensor, t: torch.Tensor, h: torch.Tensor):
+        """Predict per-node velocity given positions, time, and node features."""
         # x_t: [N, 3], h: [N, node_dim], t: [1] or [N, 1]
+        # Normalize time shape to [N, 1] for concatenation.
         if t.ndim == 0:
             t = t.view(1, 1).expand(x_t.shape[0], 1)
         if t.ndim == 1:
             t = t.view(-1, 1)
         t = t.expand(x_t.shape[0], 1)
+        # Concatenate positional, feature, and time channels.
         inp = torch.cat([x_t, h, t], dim=-1)
         return self.net(inp)
 
 
 def sample_flow_targets(x0: torch.Tensor, x1: torch.Tensor, t: torch.Tensor):
+    """Sample intermediate positions and constant velocity targets."""
+    # Linear interpolation between endpoints.
     x_t = (1.0 - t) * x0 + t * x1
+    # For straight-line flow, velocity is constant along the path.
     v_target = x1 - x0
     return x_t, v_target
