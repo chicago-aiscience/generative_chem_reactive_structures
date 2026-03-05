@@ -1,53 +1,108 @@
-<<<<<<< HEAD
-# generative_chem_reactive_structures
-AI Schmidt Hackathon 2026. Participants are tasked with predicting the 3D molecular structures of transition states using just reactant and product geometries. 
-=======
 # Generative Chem Reaction Structures Hackathon
 
-## Overview
-Goal: predict transition state (TS) 3D structures (and optionally energies).
+AI Schmidt Hackathon 2026 project on predicting 3D transition-state (TS) geometries from reactant and product structures.
 
-Inputs:
-- Reactant + product only.
+## 1) Environment Setup
 
-Outputs:
-- TS positions (and optionally TS energy).
+This repo uses a small Python stack (`numpy`, `torch`, `ipykernel`).
 
-## Dataset Summary
-The dataset is provided as a single `.pkl` file. It contains keys like:
-- `reactant`, `product`, `transition_state`, `ts_guess_*`, `use_ind`, etc.
+### Conda (recommended)
 
-Baseline uses a fixed atom count (most common atom count = 10) with no masking.
+```bash
+conda env create -f environment.yaml
+conda activate generative-chem
+```
 
-## Evaluation
-Primary metrics:
-- RMSD on TS positions.
-- Energy MAE on TS energies (optional).
+If the environment already exists and `environment.yaml` changes:
 
-Penalty:
-- If `ts_guess_*` is used as input features, a penalty is applied to the score.
+```bash
+conda env update -f environment.yaml --prune
+```
 
-## Baseline
-Midpoint baseline (from `reactOT.ipynb`):
-- TS prediction = (reactant positions + product positions) / 2
-- Fixed atom count only.
+### Pip (alternative)
 
-## Getting Started
-- See `Notebooks/` for the example notebook.
-- See `Code/Examples/` for scripts once available.
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install numpy torch ipykernel
+```
 
-## Rules / Constraints
-- Inputs restricted to reactant + product.
-- `ts_guess_*` may be used with a penalty.
-- Participants are encouraged to generalize beyond fixed atom count.
+## 2) Quick Start: Example Runs
 
-## Repo Map
-- `Code/Wrappers/`: dataset loading, splitting, baseline, metrics, XYZ writer.
-- `Code/HelperFunctions/`: small utilities, EGNN, flow matching.
-- `Code/Baselines/`: baseline methods.
-- `Code/Visualization/`: XYZ output utilities.
-- `Notebooks/`: example notebook.
+### Example A: Train and evaluate the EGNN baseline script
 
-## Acknowledgements
-Inspired by `deepprinciple-react-ot-5184332/reactOT.ipynb`.
->>>>>>> d043c0d (Initial commit)
+```bash
+python Code/Examples/train_and_eval_egnn.py \
+  --pkl Data/train_rpsb_all.pkl \
+  --atom-count 10 \
+  --epochs 3 \
+  --train-samples 200 \
+  --eval-samples 100 \
+  --out-dir outputs_xyz
+```
+
+What this does:
+- Loads the dataset from `Data/train_rpsb_all.pkl`
+- Filters to fixed atom count (default 10)
+- Trains a small EGNN baseline
+- Reports RMSD (and optional energy MAE)
+- Writes predicted TS structures as `.xyz` files into `outputs_xyz/`
+
+### Example B: Run notebook baselines
+
+```bash
+jupyter notebook Notebooks/example_baseline.ipynb
+```
+
+Other notebook examples:
+- `Notebooks/example_baseline_reactOT.ipynb`
+- `Notebooks/example_halo8_reactOT_rmsd.ipynb`
+
+## 3) Repository Structure and How To Use Each Folder
+
+### `Code/`
+Core Python code.
+
+- `Code/Wrappers/`
+  - Purpose: high-level helpers for data loading, splitting, baseline, metrics, and XYZ writing.
+  - Use when: you want reusable building blocks for experiments or scripts.
+- `Code/HelperFunctions/`
+  - Purpose: model and utility internals (EGNN, flow matching, small data utilities).
+  - Use when: implementing new models or extending training logic.
+- `Code/Examples/`
+  - Purpose: runnable script examples.
+  - Use when: you want a script-first starting point (`train_and_eval_egnn.py`).
+- `Code/README.md`
+  - Purpose: short internal code map.
+
+### `Data/`
+Local dataset files in `.pkl` format.
+
+- `train_rpsb_all.pkl`
+- `halo8_rpsb_like_all.pkl`
+
+Use this folder as the source for `--pkl` paths in scripts and notebooks.
+
+### `Notebooks/`
+Interactive walkthroughs and baseline experimentation.
+
+Use these for quick prototyping, visualization, and exploring baseline behavior before writing scripts.
+
+### `outputs_xyz/`
+Generated TS predictions as `.xyz` files.
+
+Use this folder to inspect model outputs in molecular viewers.
+
+### `Slides/`
+Presentation material for the project/hackathon.
+
+### Root docs/files
+- `ENVIRONMENT.md`: environment setup details.
+- `DATASETS.md`: dataset notes/description.
+- `environment.yaml`: conda environment spec.
+- `README.md`: high-level project entry point.
+
+## 4) Notes
+
+- Current baseline workflow is fixed-atom-count oriented (default atom count: 10).
+- Primary metric is TS coordinate RMSD; optional energy MAE is supported where energies exist.
