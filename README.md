@@ -58,7 +58,28 @@ Other notebook examples:
 - `Notebooks/example_baseline_reactOT.ipynb`
 - `Notebooks/example_halo8_reactOT_rmsd.ipynb`
 
-## 3) Repository Structure and How To Use Each Folder
+## 3) Visualization
+
+Use the notebook below to inspect generated `.xyz` structures interactively:
+
+```bash
+jupyter notebook Notebooks/xyz_visualization.ipynb
+```
+
+Notebook highlights (from `Notebooks/xyz_visualization.ipynb`):
+- Discovers `.xyz` files (or lets you set a specific file path like `outputs_xyz/ts_00000.xyz`)
+- Loads single-frame or multi-frame XYZ data with ASE
+- Supports inline visualization with ASE (`viewer='x3d'`)
+- Supports inline `py3Dmol` rendering (single frame and animation)
+- Supports optional desktop viewer launch via `ase gui`
+
+If needed, install visualization extras:
+
+```bash
+pip install ase py3Dmol ipywidgets
+```
+
+## 4) Repository Structure and How To Use Each Folder
 
 ### `Code/`
 Core Python code.
@@ -102,7 +123,7 @@ Presentation material for the project/hackathon.
 - `environment.yaml`: conda environment spec.
 - `README.md`: high-level project entry point.
 
-## 4) Notes
+## 5) Notes
 
 - Current baseline workflow is fixed-atom-count oriented (default atom count: 10).
 - Primary metric is TS coordinate RMSD; optional energy MAE is supported where energies exist.
