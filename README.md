@@ -4,9 +4,26 @@ AI Schmidt Hackathon 2026 project on predicting 3D transition-state (TS) geometr
 
 ## 1) Environment Setup
 
-This repo uses a small Python stack (`numpy`, `torch`, `ipykernel`).
+- This repo uses a small Python stack: `numpy`, `torch`, `ipykernel`
+- Additional libraries for visualization: `ase`, `py3dmol`
+- To run notebooks: `jupyterlab`
 
-### Conda (recommended)
+### `uv` (recommended)
+
+**1. Install uv: https://docs.astral.sh/uv/getting-started/installation/**
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+**2. Sync (install) project dependencies (from project root)**
+
+```bash
+cd /path/to/gh/repo/generative_chem_reactive_structures
+uv sync
+```
+
+### Conda (alternative)
 
 ```bash
 conda env create -f environment.yaml
@@ -32,7 +49,7 @@ pip install numpy torch ipykernel
 ### Example A: Train and evaluate the EGNN baseline script
 
 ```bash
-python Code/Examples/train_and_eval_egnn.py \
+uv run python Code/Examples/train_and_eval_egnn.py \
   --pkl Data/train_rpsb_all.pkl \
   --atom-count 10 \
   --epochs 3 \
@@ -51,19 +68,25 @@ What this does:
 ### Example B: Run notebook baselines
 
 ```bash
-jupyter notebook Notebooks/example_baseline.ipynb
+uv run jupyter notebook Notebooks/example_baseline.ipynb
 ```
 
 Other notebook examples:
 - `Notebooks/example_baseline_reactOT.ipynb`
 - `Notebooks/example_halo8_reactOT_rmsd.ipynb`
 
+If needed, install notebook library:
+
+```bash
+uv sync --extra jupyter
+```
+
 ## 3) Visualization
 
 Use the notebook below to inspect generated `.xyz` structures interactively:
 
 ```bash
-jupyter notebook Notebooks/xyz_visualization.ipynb
+uv run jupyter notebook Notebooks/xyz_visualization.ipynb
 ```
 
 Notebook highlights (from `Notebooks/xyz_visualization.ipynb`):
@@ -76,7 +99,7 @@ Notebook highlights (from `Notebooks/xyz_visualization.ipynb`):
 If needed, install visualization extras:
 
 ```bash
-pip install ase py3Dmol ipywidgets
+uv sync --extra visualize
 ```
 
 ## 4) Repository Structure and How To Use Each Folder
