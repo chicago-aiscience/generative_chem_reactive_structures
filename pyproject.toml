@@ -1,0 +1,20 @@
+[project]
+name = "generative-chem-reactive-structures"
+version = "0.1.0"
+description = "AI Schmidt Hackathon 2026 project on predicting 3D transition-state (TS) geometries from reactant and product structures."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "ipykernel>=7.2.0",
+    "numpy>=2.2.6",
+    "torch>=2.10.0",
+]
+
+[project.optional-dependencies]
+jupyter = [
+    "jupyterlab>=4.5.5",
+]
+visualize = [
+    "ase>=3.27.0",
+    "py3dmol>=2.5.4",
+]
