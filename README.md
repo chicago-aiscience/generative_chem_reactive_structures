@@ -5,11 +5,10 @@
 3. Remove atom count from `train_and_eval_egnn.py` - make it more general
 4. Include masking example.
 5. Provide context for what the dataset are and what format they are in - how they were created and how to work with them. - add figures for what these datasets are.
-6. Add bonus for the full reaction pathway from Halo8
-7. Identify where participants should make modifications or how they can integrate the baseline with their solution. Add to the codes.
-8. Provide an example of how to evaluate solution, I think there is a evaluation script that shows improvement but I am not sure where it is.
-9. RMSD evaluation metric in README
-10. Include a bonus folder with the Halo8 dataset - include
+6. Identify where participants should make modifications or how they can integrate the baseline with their solution. Add to the codes.
+7. Provide an example of how to evaluate solution, I think there is a evaluation script that shows improvement but I am not sure where it is.
+8. RMSD evaluation metric in README
+9. Include a bonus folder with the Halo8 dataset - include
 
 # Generative Chem Reaction Structures Hackathon
 
@@ -106,11 +105,18 @@ Current local files include:
 - `Data/halo8_rpsb_like_all.pkl`
 - split files under `Data/Halo8/` and `Data/transition1x/` (`train.pkl`, `val.pkl`, `test.pkl`)
 
+The Halo8 dataset is a modification of the transition1x by adding in halogenated groups to the molecules.
+
 For `transition1x`, some entries include TS guess structures generated from prior QM-based workflows (for example `ts_guess_*`-style fields).
+
+<img src="figures/transition1x.png" width="600">
+
+Figure X from the Transition1x paper: (a) is an example reaction from reactant to product through the transition state.
 
 <img src="figures/halo8.png" width="600">
 
-<img src="figures/transition1x.png" width="600">
+Figure X from Halo8 paper: Reaction path sampling from single reactant to multiple products. 
+
 
 Source papers / dataset links (to be added):
 - Transition1x: Paper: [https://doi.org/10.1038/s41597-022-01870-w] Dataset:[https://doi.org/10.6084/m9.figshare.19614657.v4]
@@ -120,7 +126,7 @@ Fair-use / evaluation note:
 - Using these "smarter" TS guesses as training inputs or features is allowed only with a competition penalty.
 - For fair model comparisons, report clearly whether your method uses any TS guess (`ts_guess-*` in `transition1x`) information beyond reactant/product inputs.
 
-TODO: Add how the two datsets differ. Explain the figures a little.
+TODO: Talk about why the Halo8 has more reactions. 
 
 ## 3) Visualization
 
