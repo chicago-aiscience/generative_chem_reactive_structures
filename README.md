@@ -118,7 +118,7 @@ Source papers / dataset links (to be added):
 
 Fair-use / evaluation note:
 - Using these "smarter" TS guesses as training inputs or features is allowed only with a competition penalty.
-- For fair model comparisons, report clearly whether your method uses any TS guess information beyond reactant/product inputs.
+- For fair model comparisons, report clearly whether your method uses any TS guess (`ts_guess-*` in `transition1x`) information beyond reactant/product inputs.
 
 TODO: Add how the two datsets differ. Explain the figures a little.
 
