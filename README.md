@@ -135,7 +135,14 @@ $u_t = x_{TS} - x_0$
 
 with loss
 
-$\mathcal{L} = \mathbb{E}_{t,x_t} \left[\lVert v_\theta(x_t,t \mid x_R,x_P) - u_t \rVert^2 \right]$.
+
+$$
+\mathcal{L} =
+\mathbb{E}_{t,x_t}
+\left[
+\lVert v_\theta(x_t,t \mid x_R,x_P) - u_t \rVert^2
+\right]
+$$.
 
 In short: reactant and product define the endpoints, the midpoint provides a simple initialization, and the learned flow refines that structure toward the TS.
 
