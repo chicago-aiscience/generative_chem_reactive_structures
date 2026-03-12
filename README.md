@@ -1,12 +1,15 @@
 # TODO
 
-1. Make a test train split for both Halo8 and Transition1x. Cluster them and pick distributed from clusters? Maybe not.
+1. Modify code to use these test/train/validation split datasets. Maybe have some out of distribution? 
 2. Provide more information about the different guesses. Maybe we just remove all guesses? 
 3. Remove atom count from `train_and_eval_egnn.py` - make it more general
-4. Provide context for what the dataset are and what format they are in - how they were created and how to work with them.
-5. Add bonus for the full reaction pathway from Halo8
-6. Identify where participants should make modifications or how they can integrate the baseline with their solution. Add to the codes.
-7. Provide an example of how to evaluate solution, I think there is a evaluation script that shows improvement but I am not sure where it is.
+4. Include masking example.
+5. Provide context for what the dataset are and what format they are in - how they were created and how to work with them. - add figures for what these datasets are.
+6. Add bonus for the full reaction pathway from Halo8
+7. Identify where participants should make modifications or how they can integrate the baseline with their solution. Add to the codes.
+8. Provide an example of how to evaluate solution, I think there is a evaluation script that shows improvement but I am not sure where it is.
+9. RMSD evaluation metric in README
+10. Include a bonus folder with the Halo8 dataset - include
 
 # Generative Chem Reaction Structures Hackathon
 
@@ -90,6 +93,34 @@ If needed, install notebook library:
 ```bash
 uv sync --extra jupyter
 ```
+
+## 2.5) Dataset Summary
+
+This project dataset is organized around reaction triples:
+- reactant structure
+- product structure
+- transition-state (TS) structure
+
+Current local files include:
+- `Data/train_rpsb_all.pkl`
+- `Data/halo8_rpsb_like_all.pkl`
+- split files under `Data/Halo8/` and `Data/transition1x/` (`train.pkl`, `val.pkl`, `test.pkl`)
+
+For `transition1x`, some entries include TS guess structures generated from prior QM-based workflows (for example `ts_guess_*`-style fields).
+
+<img src="figures/halo8.png" width="600">
+
+<img src="figures/transition1x.png" width="600">
+
+Source papers / dataset links (to be added):
+- Transition1x: Paper: [https://doi.org/10.1038/s41597-022-01870-w] Dataset:[https://doi.org/10.6084/m9.figshare.19614657.v4]
+- Halo8: Paper: [https://doi.org/10.1038/s41597-025-05944-3] Dataset: [https://doi.org/10.5281/zenodo.16737590.]
+
+Fair-use / evaluation note:
+- Using these "smarter" TS guesses as training inputs or features is allowed only with a competition penalty.
+- For fair model comparisons, report clearly whether your method uses any TS guess information beyond reactant/product inputs.
+
+TODO: Add how the two datsets differ. Explain the figures a little.
 
 ## 3) Visualization
 
