@@ -118,29 +118,29 @@ This project uses conditional flow matching (CFM) to generate a transition-state
 
 Let `x_R`, `x_P`, and `x_TS` denote reactant, product, and transition-state coordinates. At time `t in [0,1]`, the model predicts a vector field
 
-$v_\theta(x_t, t \mid x_R, x_P)$
+$$v_\theta(x_t, t \mid x_R, x_P)$$
 
 and evolves the structure by
 
-$\frac{d x_t}{dt} = v_\theta(x_t, t \mid x_R, x_P)$.
+$$\frac{d x_t}{dt} = v_\theta(x_t, t \mid x_R, x_P)$$.
 
 For a simple baseline, the trajectory starts from the coordinate-wise midpoint
 
-$x_0 = \frac{x_R + x_P}{2}$
+$$x_0 = \frac{x_R + x_P}{2}$$
 
 During training, the model matches a linear path from `x_0` to the true TS:
 
-$x_t = (1 - t)x_0 + t x_{TS}, \qquad$
-$u_t = x_{TS} - x_0$
+$$x_t = (1 - t)x_0 + t x_{TS}, \qquad$$
+$$u_t = x_{TS} - x_0$$
 
 with loss
 
 
-$
+$$
 \mathcal{L} =
 \mathbb{E}_{t,x_t}
 \| v_\theta(x_t, t \mid x_R, x_P) - u_t \|^2
-$
+$$
 
 In short: reactant and product define the endpoints, the midpoint provides a simple initialization, and the learned flow refines that structure toward the TS.
 
