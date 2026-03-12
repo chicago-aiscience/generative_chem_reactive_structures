@@ -153,7 +153,7 @@ $$v_\theta(x_t, t \mid x_R, x_P)$$
 
 and evolves the structure by
 
-$$\frac{d x_t}{dt} = v_\theta(x_t, t \mid x_R, x_P)$$.
+$$\frac{d x_t}{dt} = v_\theta(x_t, t \mid x_R, x_P)$$
 
 For a simple baseline, the trajectory starts from the coordinate-wise midpoint
 
