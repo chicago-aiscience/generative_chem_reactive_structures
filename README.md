@@ -219,6 +219,11 @@ Interactive walkthroughs and baseline experimentation.
 
 Use these for quick prototyping, visualization, and exploring baseline behavior before writing scripts.
 
+### `rcc.submit/`
+Example RCC / Midway job-submission files.
+
+Use this folder when you want to run training or inference on UChicago RCC resources with Slurm; it includes a sample `sub.sbatch`, a small example Python script, and brief setup notes in `rcc.submit/README.md`.
+
 ### `outputs_xyz/`
 Generated TS predictions as `.xyz` files.
 
