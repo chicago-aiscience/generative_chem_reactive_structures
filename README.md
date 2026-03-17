@@ -1,20 +1,21 @@
 # TODO
 
-1. Modify code to use these test/train/validation split datasets. Maybe have some out of distribution? 
-2. Provide more information about the different guesses. Maybe we just remove all guesses? 
-3. Remove atom count from `train_and_eval_egnn.py` - make it more general
-4. Include masking example.
-5. Provide context for what the dataset are and what format they are in - how they were created and how to work with them. - add figures for what these datasets are.
-6. Identify where participants should make modifications or how they can integrate the baseline with their solution. Add to the codes.
-7. Provide an example of how to evaluate solution, I think there is a evaluation script that shows improvement but I am not sure where it is.
-8. RMSD evaluation metric in README
+1. Evaluation metric RMSD at the end. 
+2. Modify code to use these test/train/validation split datasets. Maybe have some out of distribution? 
+3. Provide more information about the different guesses. Maybe we just remove all guesses? 
+4. Remove atom count from `train_and_eval_egnn.py` - make it more general
+5. Include masking example.
+6. Provide context for what the dataset are and what format they are in - how they were created and how to work with them. - add figures for what these datasets are.
+7. Identify where participants should make modifications or how they can integrate the baseline with their solution. Add to the codes.
+8. Provide an example of how to evaluate solution, I think there is a evaluation script that shows improvement but I am not sure where it is.
 9. Include a bonus folder with the Halo8 dataset - include
+10. Add more comments on the parameters in both the notebook and python files. 
 
 # Generative Chem Reaction Structures Hackathon
 
 AI Schmidt Hackathon 2026 project on predicting 3D transition-state (TS) geometries from reactant and product structures.
 
-## 1) Environment Setup
+## Environment Setup
 
 - This repo uses a small Python stack: `numpy`, `torch`, `ipykernel`
 - Additional libraries for visualization: `ase`, `py3dmol`
@@ -56,7 +57,7 @@ source .venv/bin/activate
 pip install numpy torch ipykernel
 ```
 
-## 2) Quick Start: Example Runs
+## Quick Start: Example Runs
 
 ### Example A: Train and evaluate the EGNN baseline script
 
@@ -93,12 +94,12 @@ If needed, install notebook library:
 uv sync --extra jupyter
 ```
 
-## 2.5) Dataset Summary
+### Dataset Summary
 
 This project dataset is organized around reaction triples:
-- reactant structure
-- product structure
-- transition-state (TS) structure
+- reactant structure (`reactant`)
+- product structure (`product`)
+- transition-state (TS) reference (`transition_state`)
 
 Current local files include:
 - `Data/train_rpsb_all.pkl`
@@ -108,6 +109,37 @@ Current local files include:
 The Halo8 dataset is a modification of the transition1x by adding in halogenated groups to the molecules.
 
 For `transition1x`, some entries include TS guess structures generated from prior QM-based workflows (for example `ts_guess_*`-style fields).
+
+What you find in each reaction entry (as used in notebooks/scripts):
+- top-level keys: `reactant`, `product`, `transition_state`, `single_fragment`, `use_ind`, `ts_guess`, `ts_guess_sbv1`, `ts_guess_true`, `ts_guess_NEBCI-xtb`
+- per-structure keys (inside `reactant`/`product`/`transition_state`): `positions`, `charges` (or `atomic_numbers`), `num_atoms`, `fragments`, `rxn`, and optional quantum properties (`wB97x_6-31G(d).energy`, forces, atomization energy)
+- `positions` is the main supervised signal: an `N x 3` coordinate array for one structure
+
+What this means for modeling:
+- input condition: reactant + product coordinates (and atom identities)
+- prediction target: transition-state coordinates for the same atoms
+- standard baseline initialization: midpoint `x0 = 0.5 * (xR + xP)`
+- evaluation question: does the predicted TS geometry reduce RMSD vs the midpoint baseline?
+
+Concrete examples from the notebooks:
+- `Notebooks/example_baseline_reactOT.ipynb`:
+  - shows keys like `dict_keys(['reactant', 'transition_state', 'product', ...])`
+  - picks a fixed atom-count subset (example run: most common `N=10`)
+  - reports sample RMSD comparison (example run): midpoint->TS `0.4242`, predicted->TS `0.2174`
+- `Notebooks/example_halo8_reactOT_rmsd.ipynb`:
+  - uses `Data/halo8_rpsb_like_all.pkl`
+  - evaluates on held-out data with summary stats (mean/median/p90 and `% improved vs midpoint`)
+
+Expected output from code (what "good output" looks like):
+- training/eval logs from `Code/Examples/train_and_eval_egnn.py`:
+  - epoch losses, then aggregate metrics such as:
+  - `model RMSD: ...`
+  - `midpoint RMSD: ...`
+  - optional `energy MAE (mean baseline): ...`
+- generated structures:
+  - predicted TS files are written to `outputs_xyz/ts_00000.xyz`, `ts_00001.xyz`, ...
+  - each file is a single XYZ frame with comment `pred_ts_i` (see `Code/Wrappers/xyz.py`)
+  - sample files are included in `sample_outputs_xyz/`
 
 <img src="figures/transition1x.png" width="600">
 
@@ -128,7 +160,7 @@ Fair-use / evaluation note:
 
 TODO: Talk about why the Halo8 has more reactions. 
 
-## 3) Visualization
+## Visualization
 
 Use the notebook below to inspect generated `.xyz` structures interactively:
 
@@ -149,9 +181,11 @@ If needed, install visualization extras:
 uv sync --extra visualize
 ```
 
-## 3.5) Conditional Flow Matching
+## Methods: Conditional Flow Matching example
 
-This project uses conditional flow matching (CFM) to generate a transition-state (TS) geometry from reactant and product structures. Rather than predicting the TS in one step, the model learns a continuous update rule for coordinates over time.
+There are several methods of predicting these transition-state (TS) structures. Some generative examples are diffusion models and conditional flow matching. Participants can also test non-generative methods to make predictions. 
+
+This repositor uses conditional flow matching (CFM) to generate a TS geometry from reactant and product structures. Rather than predicting the TS in one step, the model learns a continuous update rule for coordinates over time.
 
 Let `x_R`, `x_P`, and `x_TS` denote reactant, product, and transition-state coordinates. At time `t in [0,1]`, the model predicts a vector field
 
@@ -189,7 +223,26 @@ The sample animation below uses a simple baseline initialization: the starting s
 
 The sample `.xyz` outputs used for inspection live in `sample_outputs_xyz/`.
 
-## 4) Repository Structure and How To Use Each Folder
+
+## Evaluation (How your model is scored)
+
+- **Metric:** RMSD between predicted TS and ground-truth TS  
+- **Baseline:** midpoint initialization  
+
+`x_mid = 0.5 * (x_R + x_P)`
+
+- **What matters:** improvement over baseline  
+
+`Δ = RMSD(midpoint, TS) − RMSD(model, TS)`
+
+- **We report:**
+- Mean RMSD (lower is better)
+- % of reactions improved vs midpoint
+
+- **Goal:** outperform the midpoint baseline consistently
+
+
+## Repository Structure and How To Use Each Folder
 
 ### `Code/`
 Core Python code.
@@ -238,7 +291,7 @@ Presentation material for the project/hackathon.
 - `environment.yaml`: conda environment spec.
 - `README.md`: high-level project entry point.
 
-## 5) Notes
+## Notes
 
 - Current baseline workflow is fixed-atom-count oriented (default atom count: 10).
 - Primary metric is TS coordinate RMSD; optional energy MAE is supported where energies exist.
