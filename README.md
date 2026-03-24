@@ -59,7 +59,9 @@ pip install numpy torch ipykernel
 
 ### Note on `uv` vs. `conda`
 
-`uv` is a fast, modern Python package manager written in Rust. It resolves and installs dependencies significantly faster than conda (often 10–100×), and uses a `pyproject.toml`-based lockfile that makes environments reproducible without the overhead of conda's solver. If you're working on a fresh machine or just need to run the code quickly, `uv` is the recommended path — a single uv sync handles everything.
+`uv` is a fast, modern Python package manager written in Rust. It resolves and installs dependencies significantly faster than conda (often 10–100×), and uses a `pyproject.toml`-based lockfile that makes environments reproducible without the overhead of conda's solver.
+
+If you're working on a fresh machine or just need to run the code quickly, `uv` is the recommended path — a single uv sync handles everything.
 
 Conda is a better fit if you're working in an existing conda-based environment, need non-Python dependencies (e.g., system-level libraries or CUDA toolkits managed through conda channels), or are on an HPC cluster where `conda` is already the standard.
 
