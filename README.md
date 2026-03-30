@@ -49,6 +49,8 @@ cd generative_chem_reactive_structures
 
 The hackathon base environment is pre-installed on Midway3 at `/project/ai4s-hackathon/ai-sci-hackathon-2026/hackathon-base`. Rather than duplicating the full environment, you'll create a lightweight personal virtual environment that builds on top of it.
 
+> Please do not run any computationally heavy processing on the login node (this is the node you land on when ssh'ing to the cluster). It is okay to set up your environment on the login node but please consider using the OnDemand user interface, an interative job, or a batch script for any other work. See the ["README on RCC"](rcc.submit/README.md).
+
 #### One-Time Shell Configuration
 
 The very first time you log in, you need to initialize conda for your shell. You only need to do this once:
