@@ -1,15 +1,15 @@
 # TODO
 
-1. Evaluation metric RMSD at the end. 
-2. Modify code to use these test/train/validation split datasets. Maybe have some out of distribution? 
-3. Provide more information about the different guesses. Maybe we just remove all guesses? 
+1. Evaluation metric RMSD at the end.
+2. Modify code to use these test/train/validation split datasets. Maybe have some out of distribution?
+3. Provide more information about the different guesses. Maybe we just remove all guesses?
 4. Remove atom count from `train_and_eval_egnn.py` - make it more general
 5. Include masking example.
 6. Provide context for what the dataset are and what format they are in - how they were created and how to work with them. - add figures for what these datasets are.
 7. Identify where participants should make modifications or how they can integrate the baseline with their solution. Add to the codes.
 8. Provide an example of how to evaluate solution, I think there is a evaluation script that shows improvement but I am not sure where it is.
 9. Include a bonus folder with the Halo8 dataset - include
-10. Add more comments on the parameters in both the notebook and python files. 
+10. Add more comments on the parameters in both the notebook and python files.
 
 # Generative Chem Reaction Structures Hackathon
 
@@ -21,7 +21,77 @@ AI Schmidt Hackathon 2026 project on predicting 3D transition-state (TS) geometr
 - Additional libraries for visualization: `ase`, `py3dmol`
 - To run notebooks: `jupyterlab`
 
-### `uv` (recommended)
+### Midway3 (RCC Cluster) — Recommended for Hackathon
+
+The hackathon base environment is pre-installed on Midway3 at `/project/ai4s-hackathon/ai-sci-hackathon-2026/hackathon-base`. Rather than duplicating the full environment, you'll create a lightweight personal virtual environment that builds on top of it.
+
+#### One-Time Shell Configuration
+
+The very first time you log in, you need to initialize conda for your shell. You only need to do this once:
+
+```bash
+module load python/miniforge-25.3.0
+conda init
+source ~/.bashrc
+```
+
+#### Setting Up Your Personal Environment
+
+Run these commands once after the shell configuration above to create a virtual environment (`venv`) from the base `conda` environment:
+
+```bash
+# 1. Load conda
+module load python/miniforge-25.3.0
+
+# 2. Activate the shared hackathon conda environment
+conda activate /project/ai4s-hackathon/ai-sci-hackathon-2026/hackathon-base
+
+# 3. Create your personal virtual environment in your home directory
+python -m venv --system-site-packages ~/my-hack-venv
+
+# 4. Activate your personal environment
+source ~/my-hack-venv/bin/activate
+```
+
+#### Every Subsequent Session
+
+Run these commands to load and activate your virtual environment that references the base `conda` environment:
+
+```bash
+module load python/miniforge-25.3.0
+conda activate /project/ai4s-hackathon/ai-sci-hackathon-2026/hackathon-base
+source ~/my-hack-venv/bin/activate
+```
+
+#### Installing Additional Packages
+
+Make sure your personal venv is active first, then:
+
+```bash
+pip install <package-name>
+```
+
+This installs only into your personal environment — the shared base is not affected. To see only the packages you've added (vs. what's inherited from the base):
+
+```bash
+pip list --local
+```
+
+#### Troubleshooting
+
+If you run into a package conflict or something breaks, you can delete and recreate your personal `venv` without touching the shared environment:
+
+```bash
+rm -rf ~/my-hack-venv
+module load python/miniforge-25.3.0
+conda activate /project/ai4s-hackathon/ai-sci-hackathon-2026/hackathon-base
+python -m venv --system-site-packages ~/my-hack-venv
+source ~/my-hack-venv/bin/activate
+```
+
+---
+
+### `uv` (recommended for local development on your laptop)
 
 **1. Install uv: https://docs.astral.sh/uv/getting-started/installation/**
 
@@ -36,7 +106,7 @@ cd /path/to/gh/repo/generative_chem_reactive_structures
 uv sync
 ```
 
-### Conda (alternative)
+### Conda (alternative for local development)
 
 ```bash
 conda env create -f environment.yaml
@@ -49,13 +119,21 @@ If the environment already exists and `environment.yaml` changes:
 conda env update -f environment.yaml --prune
 ```
 
-### Pip (alternative)
+### Pip (alternative for local development)
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install numpy torch ipykernel
 ```
+
+### Note on `uv` vs. `conda`
+
+`uv` is a fast, modern Python package manager written in Rust. It resolves and installs dependencies significantly faster than conda (often 10–100×), and uses a `pyproject.toml`-based lockfile that makes environments reproducible without the overhead of conda's solver. If you're working on a fresh machine or just need to run the code quickly, `uv` is the recommended path — a single `uv sync` handles everything.
+
+Conda is a better fit if you're working in an existing conda-based environment, need non-Python dependencies (e.g., system-level libraries or CUDA toolkits managed through conda channels), or are on an HPC cluster where `conda` is already the standard.
+
+> Note that the `uv`-managed environment will not interfere with any existing conda setup.
 
 ## Quick Start: Example Runs
 
@@ -147,7 +225,7 @@ Figure X from the Transition1x paper: (a) is an example reaction from reactant t
 
 <img src="figures/halo8.png" width="600">
 
-Figure X from Halo8 paper: Reaction path sampling from single reactant to multiple products. 
+Figure X from Halo8 paper: Reaction path sampling from single reactant to multiple products.
 
 
 Source papers / dataset links (to be added):
@@ -158,7 +236,7 @@ Fair-use / evaluation note:
 - Using these "smarter" TS guesses as training inputs or features is allowed only with a competition penalty.
 - For fair model comparisons, report clearly whether your method uses any TS guess (`ts_guess-*` in `transition1x`) information beyond reactant/product inputs.
 
-TODO: Talk about why the Halo8 has more reactions. 
+TODO: Talk about why the Halo8 has more reactions.
 
 ## Visualization
 
@@ -183,9 +261,9 @@ uv sync --extra visualize
 
 ## Methods: Conditional Flow Matching example
 
-There are several methods of predicting these transition-state (TS) structures. Some generative examples are diffusion models and conditional flow matching. Participants can also test non-generative methods to make predictions. 
+There are several methods of predicting these transition-state (TS) structures. Some generative examples are diffusion models and conditional flow matching. Participants can also test non-generative methods to make predictions.
 
-This repositor uses conditional flow matching (CFM) to generate a TS geometry from reactant and product structures. Rather than predicting the TS in one step, the model learns a continuous update rule for coordinates over time.
+This repository uses conditional flow matching (CFM) to generate a TS geometry from reactant and product structures. Rather than predicting the TS in one step, the model learns a continuous update rule for coordinates over time.
 
 Let `x_R`, `x_P`, and `x_TS` denote reactant, product, and transition-state coordinates. At time `t in [0,1]`, the model predicts a vector field
 
@@ -206,7 +284,6 @@ $$u_t = x_{TS} - x_0$$
 
 with loss
 
-
 $$
 \mathcal{L} =
 \mathbb{E}_{t,x_t}
@@ -226,18 +303,18 @@ The sample `.xyz` outputs used for inspection live in `sample_outputs_xyz/`.
 
 ## Evaluation (How your model is scored)
 
-- **Metric:** RMSD between predicted TS and ground-truth TS  
-- **Baseline:** midpoint initialization  
+- **Metric:** RMSD between predicted TS and ground-truth TS
+- **Baseline:** midpoint initialization
 
 `x_mid = 0.5 * (x_R + x_P)`
 
-- **What matters:** improvement over baseline  
+- **What matters:** improvement over baseline
 
 `Δ = RMSD(midpoint, TS) − RMSD(model, TS)`
 
 - **We report:**
-- Mean RMSD (lower is better)
-- % of reactions improved vs midpoint
+  - Mean RMSD (lower is better)
+  - % of reactions improved vs midpoint
 
 - **Goal:** outperform the midpoint baseline consistently
 
