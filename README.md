@@ -1,19 +1,42 @@
-# TODO
+## TODO
 
-1. Evaluation metric RMSD at the end.
-2. Modify code to use these test/train/validation split datasets. Maybe have some out of distribution?
-3. Provide more information about the different guesses. Maybe we just remove all guesses?
 4. Remove atom count from `train_and_eval_egnn.py` - make it more general
 5. Include masking example.
-6. Provide context for what the dataset are and what format they are in - how they were created and how to work with them. - add figures for what these datasets are.
 7. Identify where participants should make modifications or how they can integrate the baseline with their solution. Add to the codes.
 8. Provide an example of how to evaluate solution, I think there is a evaluation script that shows improvement but I am not sure where it is.
 9. Include a bonus folder with the Halo8 dataset - include
 10. Add more comments on the parameters in both the notebook and python files.
 
-# Generative Chem Reaction Structures Hackathon
+  ## Generative Chem Reaction Structures Hackathon
 
-AI Schmidt Hackathon 2026 project on predicting 3D transition-state (TS) geometries from reactant and product structures.
+This project is the working repository for the AI Schmidt Hackathon 2026 challenge on generating 3D transition-
+state (TS) structures for chemical reactions. Participants are given reaction data containing reactant
+structures, product structures, and reference transition-state geometries, and the goal is to build models that
+can predict the TS geometry as accurately as possible from the available inputs.
+
+In practical terms, the hackathon sits at the intersection of machine learning, molecular structure prediction,
+and reaction modeling. The repository includes baseline code, example notebooks, and datasets derived from
+resources such as transition1x and Halo8. These materials are intended to help participants understand the data
+format, run a reference model, and develop improved methods for TS structure generation and evaluation.
+
+  ## Participant Objectives
+
+Participants in the hackathon are expected to:
+
+- Understand the reaction-structure data provided in this repository.
+- Use reactant and product geometries to predict the corresponding transition-state structure.
+- Start from the provided baselines and modify, replace, or extend them with their own approach.
+- Evaluate performance against shared metrics such as RMSD and comparison to midpoint-based baselines.
+- Clearly document any additional assumptions, features, or external information used in their method.
+
+## Clone and Initial Setup
+
+Clone the repository first:
+
+```bash
+git clone https://github.com/siddarthachar/generative_chem_reactive_structures.git
+cd generative_chem_reactive_structures
+```
 
 ## Environment Setup
 
