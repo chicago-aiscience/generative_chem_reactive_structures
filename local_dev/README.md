@@ -67,3 +67,9 @@ uv sync --extra jupyter
 ```bash
 uv run jupyter notebook Notebooks/example_baseline.ipynb
 ```
+
+If needed, install visualization extras:
+
+```bash
+uv sync --extra visualize
+```

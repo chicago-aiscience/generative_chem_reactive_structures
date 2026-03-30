@@ -15,19 +15,8 @@ Use `scp` to copy files:
 
 `scp -r [cnetid]@midway3.rcc.uchicago.edu:[rcc_path - source] [local_path - destination]`
 
-## 3. Use Open OnDemand (recommended)
 
-Open OnDemand portal: https://midway3-ondemand.rcc.uchicago.edu
-
-Recommended tools:
-- JupyterLab on OnDemand for analysis/training
-- Midway Desktop (Linux GUI) for visualization
-
-Setup details: https://docs.rcc.uchicago.edu/open_ondemand/open_ondemand/
-
-If needed, ask mentors or project organizers for help with setup.
-
-## 4. Submit and monitor batch jobs
+## 3. Submit and monitor batch jobs
 
 To run multiple calculations (training/inference) on RCC:
 
@@ -43,7 +32,7 @@ More on `squeue` status/reason codes: https://docs.rcc.uchicago.edu/slurm/sbatch
 General RCC job notes: https://docs.rcc.uchicago.edu/101/jobs/
 
 
-## 5. Launch a jupyter session on RCC
+## 4. Launch a jupyter session on RCC
 
 ```
 module load python/miniforge-25.3.0
@@ -74,3 +63,15 @@ where HOST_IP is the external IP address of the login node obtained from Step 2,
 This command will create an SSH connection from your local machine to Midway login or compute nodes and forward the 15021 port to your local host at port 15021. The port number should be consistent across all the steps (15021 in this example). You can find out the meaning for the arguments used in this command at explainshell.com.
 
 After successfully logging with 2FA as usual, you will be able to open the URL http://127.0.0.1:15021/?token=...., or equivalently, localhost:15021/?token=.... in the browser on your local machine.
+```
+## 5. Use Open OnDemand (optional way to run jupyter sessions)
+
+Open OnDemand portal: https://midway3-ondemand.rcc.uchicago.edu
+
+Recommended tools:
+- JupyterLab on OnDemand for analysis/training
+- Midway Desktop (Linux GUI) for visualization
+
+Setup details: https://docs.rcc.uchicago.edu/open_ondemand/open_ondemand/
+
+If needed, ask mentors or project organizers for help with setup.

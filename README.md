@@ -1,6 +1,5 @@
 ## TODO
 
-1. Remove uv discussions to run the scripts - the uv is only for local runs - move uv discussions to another directory.  
 4. Remove atom count from `train_and_eval_egnn.py` - make it more general
 5. Include masking example.
 7. Identify where participants should make modifications or how they can integrate the baseline with their solution. Add to the codes.
@@ -145,10 +144,9 @@ What this does:
 
 ### Example B: Run notebook baselines
 
+You can go through some example jupyter notebooks. There are many ways to run these notebooks on RCC. Refer to "4. Launch a jupyter session on RCC" in `rcc.submit/README.md` for help with setting up a jupyter notebook on RCC. There are other ways to run notebooks on RCC, including remote VSCode and OnDemand. Please contact your mentors if you are having trouble with setting up notebooks. 
 
-```bash
-jupyter notebook Notebooks/example_baseline.ipynb
-```
+Refer to `Notebooks/example_baseline.ipynb` for a working example.
 
 Other notebook examples:
 - `Notebooks/example_baseline_reactOT.ipynb`
@@ -228,11 +226,7 @@ TODO: Talk about why the Halo8 has more reactions.
 
 ## Visualization
 
-Use the notebook below to inspect generated `.xyz` structures interactively:
-
-```bash
-jupyter notebook Notebooks/xyz_visualization.ipynb
-```
+Use the notebook below to inspect generated `.xyz` structures interactively - as shown in `Notebooks/xyz_visualization.ipynb`
 
 Notebook highlights (from `Notebooks/xyz_visualization.ipynb`):
 - Discovers `.xyz` files (or lets you set a specific file path like `outputs_xyz/ts_00000.xyz`)
@@ -241,11 +235,11 @@ Notebook highlights (from `Notebooks/xyz_visualization.ipynb`):
 - Supports inline `py3Dmol` rendering (single frame and animation)
 - Supports optional desktop viewer launch via `ase gui`
 
-If needed, install visualization extras:
+<!-- If needed, install visualization extras:
 
 ```bash
 uv sync --extra visualize
-```
+``` -->
 
 ## Methods: Conditional Flow Matching example
 
