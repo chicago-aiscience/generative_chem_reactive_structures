@@ -6,7 +6,6 @@
 8. Provide an example of how to evaluate solution, I think there is a evaluation script that shows improvement but I am not sure where it is.
 9. Include a bonus folder with the Halo8 dataset - include
 10. Add more comments on the parameters in both the notebook and python files.
-11. OK
 
   ## Generative Chem Reaction Structures Hackathon
 
