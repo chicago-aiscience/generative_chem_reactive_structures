@@ -118,12 +118,20 @@ port_num="${host_port##*:}"
 
 if [[ -n "$host_ip" && -n "$port_num" && "$port_num" =~ ^[0-9]+$ && "$host_ip" != "$port_num" ]]; then
   cnetid="${CNETID:-${USER:-<your-CNetID>}}"
+  # Local (-L first port) can differ from Jupyter's port on the compute node. If the
+  # first number matches something already listening on your laptop, SSH errors with
+  # "Address already in use" — set LOCAL_TUNNEL_PORT to any free port on your machine.
+  local_listen="${LOCAL_TUNNEL_PORT:-$port_num}"
   echo
   echo "Detected HOST_IP: $host_ip"
-  echo "Detected PORT:    $port_num"
+  echo "Detected Jupyter port (remote): $port_num"
+  echo "Local listen port (your machine): $local_listen  (set LOCAL_TUNNEL_PORT before running this script to change it)"
   echo
-  echo "SSH tunnel command:"
-  echo "ssh -N -f -L ${port_num}:${host_ip}:${port_num} ${cnetid}@midway3.rcc.uchicago.edu"
+  echo "SSH tunnel command (run this on your laptop, not on Midway):"
+  echo "ssh -N -f -L ${local_listen}:${host_ip}:${port_num} ${cnetid}@midway3.rcc.uchicago.edu"
+  echo
+  echo "Then open Jupyter in your browser using the local port (token unchanged):"
+  echo "$(echo "$first_url" | sed -E "s#^https?://[^/]+#http://127.0.0.1:${local_listen}#")"
 fi
 
 
