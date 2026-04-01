@@ -7,7 +7,7 @@
 9. Include a bonus folder with the Halo8 dataset - include
 10. Add more comments on the parameters in both the notebook and python files.
 11. On demand miniforge is an order version compared to the repo
-12. Make it more general for now. 
+12. Make it more general for now.
 13. All in one place: how to use RCC on the terminal - and how to use notebooks RCC - uv as a side thing
 
   ## Generative Chem Reaction Structures Hackathon
@@ -51,7 +51,7 @@ cd generative_chem_reactive_structures
 
 The hackathon base environment is pre-installed on Midway3 at `/project/ai4s-hackathon/ai-sci-hackathon-2026/hackathon-base`. Rather than duplicating the full environment, you'll create a lightweight personal virtual environment that builds on top of it.
 
-> Please do not run any computationally heavy processing on the login node (this is the node you land on when ssh'ing to the cluster). It is okay to set up your environment on the login node but please consider using the OnDemand user interface, an interative job, or a batch script for any other work. See the ["README on RCC"](rcc.submit/README.md).
+> Please do not run any computationally heavy processing on the login node (this is the node you land on when ssh'ing to the cluster). It is okay to set up your environment on the login node but please consider using an interative job or a batch script for any other work. See the ["README on RCC"](rcc.submit/README.md).
 
 #### One-Time Shell Configuration
 
@@ -119,7 +119,7 @@ source ~/my-hack-venv/bin/activate
 
 ---
 
-> If you plan to make developments locally on your PC, then here are some tips to set up either `uv` or `conda` environments. It may be more convenient for some to make changes locally and perform model training/test on the cluster (RCC). Please refer to `local_dev/README.md` on help with setting it up locally.  
+> If you plan to make developments locally on your PC, then here are some tips to set up either `uv` or `conda` environments. It may be more convenient for some to make changes locally and perform model training/test on the cluster (RCC). Please refer to [`local_dev/README.md`](local_dev/README.md) on help with setting it up locally.
 
 ## Quick Start: Example Runs
 
@@ -144,14 +144,14 @@ What this does:
 
 ### Example B: Run notebook baselines
 
-You can go through some example jupyter notebooks. There are many ways to run these notebooks on RCC. Refer to "4. Launch a jupyter session on RCC" in `rcc.submit/README.md` for help with setting up a jupyter notebook on RCC. There are other ways to run notebooks on RCC, including remote VSCode and OnDemand. Please contact your mentors if you are having trouble with setting up notebooks. 
+You can go through some example jupyter notebooks. There are many ways to run these notebooks on RCC. Refer to "4. Launch a jupyter session on RCC" in [`rcc.submit/README.md`](rcc.submit/README.md#4-launch-a-jupyter-session-on-rcc) for help with setting up a jupyter notebook on RCC. There are other ways to run notebooks on RCC, including remote VSCode and OnDemand. Please contact your mentors if you are having trouble with setting up notebooks.
 
 Refer to `Notebooks/example_baseline.ipynb` for a working example.
 
 Other notebook examples:
 - `Notebooks/example_baseline_reactOT.ipynb`
 - `Notebooks/example_halo8_reactOT_rmsd.ipynb`
-<!-- 
+<!--
 If needed, install notebook library:
 
 ```bash
