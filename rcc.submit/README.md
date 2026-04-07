@@ -32,46 +32,16 @@ More on `squeue` status/reason codes: https://docs.rcc.uchicago.edu/slurm/sbatch
 General RCC job notes: https://docs.rcc.uchicago.edu/101/jobs/
 
 
-## 4. Launch a jupyter session on RCC
+## 5. Launch a jupter lab session on an RCC compute node
 
-```
-module load python/miniforge-25.3.0
-source ~/my_hackaton_env/bin/activate
+### Via sbatch (recommended)
 
-HOST_IP=`/sbin/ip route get 8.8.8.8 | awk '{print $7;exit}'`
-echo $HOST_IP
-'''
+We have pre-written an sbatch file `notebook.slurm` which does the necessary steps to launch a jupyter lab session on the cluster. Please edit the variables: `account` (and `source [path to venv]` if necessary) in `notebook.slurm`. Then when you run `./launch_notebook.sh` the job request will be automatically submitted and it will return the jupyter lab URLs and the SSH tunnel command. If you are currently accessing the web via the university you should be able to just copy-paste the 10.xx.xxx.xx url in your browser. If you are running this via Visual Studio Code then VS Code might automatically forward the port and you should be able to just copy-paste the 127.x.x.x address in your browser. Otherwise you first need to run the SSH tunnel command on your laptop and then you'll be able to connect via your browser using the 127.x.x.x address. If the default jupyter port is not available on your machine you can run `LOCAL_TUNNEL_PORT=[whichever local port you want] ./launch_notebook.sh` to use another port.
 
-The HOST_IP should be either 128.135.x.y (an external address), or 10.50.x.y (on-campus address). Then launch jupyter with
+### Via the terminal 
 
-```
-jupyter-lab --no-browser --ip=$HOST_IP --port=15021
-'''
+Follow the tutorial at: https://docs.rcc.uchicago.edu/software/apps-and-envs/python/#running-jupyter-notebooks.
 
-which will give you two URLs with a token, one with the external address 128.135.x.y, and another with the on-campus address 10.50.x.y, or with your local host 127.0.0.*. The on-campus address 10.50.x.y is only valid when you are connecting to Midway2 or Midway3 via VPN.
+### Remember to close your jupyter session
 
-Open a web browser on your local machine with the returned URLs.
-
-If you are using on-campus network or VPN, you can copy-paste (or Ctrl + click) the URL with the external address, or the URL with the on-campus address into the browser's address bar.
-
-Without VPN, you need to use SSH tunneling to connect to the Jupyter server launched on the Midway2 (or Midway3) login or compute nodes in Step 3 from your local machine. To do that, open another terminal window on your local machine and run
-
-```
-ssh -N -f -L 15021:<HOST_IP>:15021 <your-CNetID>@midway3.rcc.uchicago.edu
-'''
-where HOST_IP is the external IP address of the login node obtained from Step 2, and 15021 is the port number used in Step 3.
-This command will create an SSH connection from your local machine to Midway login or compute nodes and forward the 15021 port to your local host at port 15021. The port number should be consistent across all the steps (15021 in this example). You can find out the meaning for the arguments used in this command at explainshell.com.
-
-After successfully logging with 2FA as usual, you will be able to open the URL http://127.0.0.1:15021/?token=...., or equivalently, localhost:15021/?token=.... in the browser on your local machine.
-```
-## 5. Use Open OnDemand (optional way to run jupyter sessions)
-
-Open OnDemand portal: https://midway3-ondemand.rcc.uchicago.edu
-
-Recommended tools:
-- JupyterLab on OnDemand for analysis/training
-- Midway Desktop (Linux GUI) for visualization
-
-Setup details: https://docs.rcc.uchicago.edu/open_ondemand/open_ondemand/
-
-If needed, ask mentors or project organizers for help with setup.
+When you are done, remember to terminate your jupter session so as to not waste any unecessary compute. To do so list your current jobs with `squeue --me` and then cancel the appropriate one with `scancel [JOB_ID]`. 
