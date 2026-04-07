@@ -15,19 +15,8 @@ Use `scp` to copy files:
 
 `scp -r [cnetid]@midway3.rcc.uchicago.edu:[rcc_path - source] [local_path - destination]`
 
-## 3. Use Open OnDemand (recommended)
 
-Open OnDemand portal: https://midway3-ondemand.rcc.uchicago.edu
-
-Recommended tools:
-- JupyterLab on OnDemand for analysis/training
-- Midway Desktop (Linux GUI) for visualization
-
-Setup details: https://docs.rcc.uchicago.edu/open_ondemand/open_ondemand/
-
-If needed, ask mentors or project organizers for help with setup.
-
-## 4. Submit and monitor batch jobs
+## 3. Submit and monitor batch jobs
 
 To run multiple calculations (training/inference) on RCC:
 

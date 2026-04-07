@@ -6,6 +6,9 @@
 8. Provide an example of how to evaluate solution, I think there is a evaluation script that shows improvement but I am not sure where it is.
 9. Include a bonus folder with the Halo8 dataset - include
 10. Add more comments on the parameters in both the notebook and python files.
+11. On demand miniforge is an order version compared to the repo
+12. Make it more general for now.
+13. All in one place: how to use RCC on the terminal - and how to use notebooks RCC - uv as a side thing
 
   ## Generative Chem Reaction Structures Hackathon
 
@@ -48,7 +51,7 @@ cd generative_chem_reactive_structures
 
 The hackathon base environment is pre-installed on Midway3 at `/project/ai4s-hackathon/ai-sci-hackathon-2026/hackathon-base`. Rather than duplicating the full environment, you'll create a lightweight personal virtual environment that builds on top of it.
 
-> Please do not run any computationally heavy processing on the login node (this is the node you land on when ssh'ing to the cluster). It is okay to set up your environment on the login node but please consider using the OnDemand user interface, an interative job, or a batch script for any other work. See the ["README on RCC"](rcc.submit/README.md).
+> Please do not run any computationally heavy processing on the login node (this is the node you land on when ssh'ing to the cluster). It is okay to set up your environment on the login node but please consider using an interative job or a batch script for any other work. See the ["README on RCC"](rcc.submit/README.md).
 
 #### One-Time Shell Configuration
 
@@ -116,56 +119,14 @@ source ~/my-hack-venv/bin/activate
 
 ---
 
-### `uv` (recommended for local development on your laptop)
-
-**1. Install uv: https://docs.astral.sh/uv/getting-started/installation/**
-
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-**2. Sync (install) project dependencies (from project root)**
-
-```bash
-cd /path/to/gh/repo/generative_chem_reactive_structures
-uv sync
-```
-
-### Conda (alternative for local development)
-
-```bash
-conda env create -f environment.yaml
-conda activate generative-chem
-```
-
-If the environment already exists and `environment.yaml` changes:
-
-```bash
-conda env update -f environment.yaml --prune
-```
-
-### Pip (alternative for local development)
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install numpy torch ipykernel
-```
-
-### Note on `uv` vs. `conda`
-
-`uv` is a fast, modern Python package manager written in Rust. It resolves and installs dependencies significantly faster than conda (often 10–100×), and uses a `pyproject.toml`-based lockfile that makes environments reproducible without the overhead of conda's solver. If you're working on a fresh machine or just need to run the code quickly, `uv` is the recommended path — a single `uv sync` handles everything.
-
-Conda is a better fit if you're working in an existing conda-based environment, need non-Python dependencies (e.g., system-level libraries or CUDA toolkits managed through conda channels), or are on an HPC cluster where `conda` is already the standard.
-
-> Note that the `uv`-managed environment will not interfere with any existing conda setup.
+> If you plan to make developments locally on your PC, then here are some tips to set up either `uv` or `conda` environments. It may be more convenient for some to make changes locally and perform model training/test on the cluster (RCC). Please refer to [`local_dev/README.md`](local_dev/README.md) on help with setting it up locally.
 
 ## Quick Start: Example Runs
 
 ### Example A: Train and evaluate the EGNN baseline script
 
 ```bash
-uv run python Code/Examples/train_and_eval_egnn.py \
+python Code/Examples/train_and_eval_egnn.py \
   --pkl Data/train_rpsb_all.pkl \
   --atom-count 10 \
   --epochs 3 \
@@ -176,26 +137,26 @@ uv run python Code/Examples/train_and_eval_egnn.py \
 
 What this does:
 - Loads the dataset from `Data/train_rpsb_all.pkl`
-- Filters to fixed atom count (default 10)
+- Filters to fixed atom count (default 10) **final implementation must be generalized to any atom count - not fixed**
 - Trains a small EGNN baseline
 - Reports RMSD (and optional energy MAE)
 - Writes predicted TS structures as `.xyz` files into `outputs_xyz/`
 
 ### Example B: Run notebook baselines
 
-```bash
-uv run jupyter notebook Notebooks/example_baseline.ipynb
-```
+You can go through some example jupyter notebooks. There are many ways to run these notebooks on RCC. Refer to "4. Launch a jupyter session on RCC" in [`rcc.submit/README.md`](rcc.submit/README.md#4-launch-a-jupyter-session-on-rcc) for help with setting up a jupyter notebook on RCC. There are other ways to run notebooks on RCC, including remote VSCode and OnDemand. Please contact your mentors if you are having trouble with setting up notebooks.
+
+Refer to `Notebooks/example_baseline.ipynb` for a working example.
 
 Other notebook examples:
 - `Notebooks/example_baseline_reactOT.ipynb`
 - `Notebooks/example_halo8_reactOT_rmsd.ipynb`
-
+<!--
 If needed, install notebook library:
 
 ```bash
 uv sync --extra jupyter
-```
+``` -->
 
 ### Dataset Summary
 
@@ -265,11 +226,7 @@ TODO: Talk about why the Halo8 has more reactions.
 
 ## Visualization
 
-Use the notebook below to inspect generated `.xyz` structures interactively:
-
-```bash
-uv run jupyter notebook Notebooks/xyz_visualization.ipynb
-```
+Use the notebook below to inspect generated `.xyz` structures interactively - as shown in `Notebooks/xyz_visualization.ipynb`
 
 Notebook highlights (from `Notebooks/xyz_visualization.ipynb`):
 - Discovers `.xyz` files (or lets you set a specific file path like `outputs_xyz/ts_00000.xyz`)
@@ -278,11 +235,11 @@ Notebook highlights (from `Notebooks/xyz_visualization.ipynb`):
 - Supports inline `py3Dmol` rendering (single frame and animation)
 - Supports optional desktop viewer launch via `ase gui`
 
-If needed, install visualization extras:
+<!-- If needed, install visualization extras:
 
 ```bash
 uv sync --extra visualize
-```
+``` -->
 
 ## Methods: Conditional Flow Matching example
 
