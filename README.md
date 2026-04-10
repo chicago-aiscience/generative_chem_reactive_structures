@@ -280,6 +280,8 @@ $$
 
 In short: reactant and product define the endpoints, the midpoint provides a simple initialization, and the learned flow refines that structure toward the TS.
 
+**Note:** There are existing flow matching packages that one could use: [Meta flow matching](https://github.com/facebookresearch/flow_matching/tree/main)
+
 ### Example flow-matching output
 
 The sample animation below uses a simple baseline initialization: the starting structure is the coordinate-wise mean of the reactant and product states. From that baseline, flow matching evolves the geometry toward the transition state (TS).
