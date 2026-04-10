@@ -29,7 +29,8 @@ def subset_dataset(dataset: Dict[str, Any], indices: Iterable[int]) -> Dict[str,
 
 
 def filter_by_atom_count(dataset: Dict[str, Any], count: int) -> List[int]:
-    """Return indices where the reactant atom count equals the provided count."""
+    """Return indices where the reactant atom count equals the provided count. 
+    NOTE:: This is only for testing!!!! Final version should be generalized"""
     num_atoms = dataset["reactant"]["num_atoms"]
     if isinstance(num_atoms, np.ndarray):
         return [i for i, n in enumerate(num_atoms) if int(n) == int(count)]
