@@ -94,7 +94,7 @@ def main():
     else:
         mean_energy = 0.0
 
-    energy_mae = []
+    # energy_mae = []
     preds_xyz = []
     for i in range(eval_n):
         r_pos = test["reactant"]["positions"][i]
@@ -116,15 +116,15 @@ def main():
         rmsd_midpoint.append(compute_rmsd(ts_mid, ts_true))
         preds_xyz.append(ts_pred)
 
-        # Optional energy baseline if energies are present.
-        if "wB97x_6-31G(d).energy" in test["transition_state"]:
-            true_e = float(test["transition_state"]["wB97x_6-31G(d).energy"][i])
-            energy_mae.append(compute_energy_mae(mean_energy, true_e))
+        # # Optional energy baseline if energies are present.
+        # if "wB97x_6-31G(d).energy" in test["transition_state"]:
+        #     true_e = float(test["transition_state"]["wB97x_6-31G(d).energy"][i])
+        #     energy_mae.append(compute_energy_mae(mean_energy, true_e))
 
     print(f"model RMSD: {np.mean(rmsd_model):.6f}")
     print(f"midpoint RMSD: {np.mean(rmsd_midpoint):.6f}")
-    if energy_mae:
-        print(f"energy MAE (mean baseline): {np.mean(energy_mae):.6f}")
+    # if energy_mae:
+    #     print(f"energy MAE (mean baseline): {np.mean(energy_mae):.6f}")
 
     # Write predicted TS structures as XYZ files for inspection.
     write_xyz_dir(args.out_dir, preds_xyz)

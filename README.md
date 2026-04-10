@@ -1,15 +1,3 @@
-## TODO
-
-4. Remove atom count from `train_and_eval_egnn.py` - make it more general
-5. Include masking example.
-7. Identify where participants should make modifications or how they can integrate the baseline with their solution. Add to the codes.
-8. Provide an example of how to evaluate solution, I think there is a evaluation script that shows improvement but I am not sure where it is.
-9. Include a bonus folder with the Halo8 dataset - include
-10. Add more comments on the parameters in both the notebook and python files.
-11. On demand miniforge is an order version compared to the repo
-12. Make it more general for now.
-13. All in one place: how to use RCC on the terminal - and how to use notebooks RCC - uv as a side thing
-
   ## Generative Chem Reaction Structures Hackathon
 
 This project is the working repository for the AI Schmidt Hackathon 2026 challenge on generating 3D transition-
@@ -27,9 +15,9 @@ format, run a reference model, and develop improved methods for TS structure gen
 Participants in the hackathon are expected to:
 
 - Understand the reaction-structure data provided in this repository.
-- Use reactant and product geometries to predict the corresponding transition-state structure.
-- Start from the provided baselines and modify, replace, or extend them with their own approach.
-- Evaluate performance against shared metrics such as RMSD and comparison to midpoint-based baselines.
+- Use reactant and product geometries (transition1x dataset) to predict the corresponding transition-state structure.
+- Can start from the provided baselines and modify, replace, or extend them with their own approach.
+- Evaluate performance against shared metrics such as RMSD and comparison to midpoint-based baselines. Bonus for teams that achieve an RMSD score of lower than 0.01!
 - Clearly document any additional assumptions, features, or external information used in their method.
 
 ## Clone and Initial Setup
@@ -125,9 +113,11 @@ source ~/my-hack-venv/bin/activate
 
 ### Example A: Train and evaluate the EGNN baseline script
 
+This script uses equivarient graph neural networks (EGNN) for molecular representation and conditional flow matching for prediction. Details are explained later in the doc. Participants can use this script as a base structure and implement their own method. 
+
 ```bash
 python Code/Examples/train_and_eval_egnn.py \
-  --pkl Data/train_rpsb_all.pkl \
+  --pkl Data/transition1x/train.pkl \
   --atom-count 10 \
   --epochs 3 \
   --train-samples 200 \
@@ -136,8 +126,8 @@ python Code/Examples/train_and_eval_egnn.py \
 ```
 
 What this does:
-- Loads the dataset from `Data/train_rpsb_all.pkl`
-- Filters to fixed atom count (default 10) **final implementation must be generalized to any atom count - not fixed**
+- Loads the dataset from `Data/transition1x/train.pkl`
+- Filters to fixed atom count (default 10) **NOTE: final implementation must be generalized to any atom count - not fixed**
 - Trains a small EGNN baseline
 - Reports RMSD (and optional energy MAE)
 - Writes predicted TS structures as `.xyz` files into `outputs_xyz/`
@@ -166,18 +156,14 @@ This project dataset is organized around reaction triples:
 - transition-state (TS) reference (`transition_state`)
 
 Current local files include:
-- `Data/train_rpsb_all.pkl`
-- `Data/halo8_rpsb_like_all.pkl`
-- split files under `Data/Halo8/` and `Data/transition1x/` (`train.pkl`, `val.pkl`, `test.pkl`)
-
-The Halo8 dataset is a modification of the transition1x by adding in halogenated groups to the molecules.
-
-For `transition1x`, some entries include TS guess structures generated from prior QM-based workflows (for example `ts_guess_*`-style fields).
+- `Data/transition1x/` contains `train.pkl`, `val.pkl`, `test.pkl`
+- Entries include TS guess structures generated from prior quantum mechanics (QM)-based workflows (for example `ts_guess_*`-style fields).
 
 What you find in each reaction entry (as used in notebooks/scripts):
 - top-level keys: `reactant`, `product`, `transition_state`, `single_fragment`, `use_ind`, `ts_guess`, `ts_guess_sbv1`, `ts_guess_true`, `ts_guess_NEBCI-xtb`
 - per-structure keys (inside `reactant`/`product`/`transition_state`): `positions`, `charges` (or `atomic_numbers`), `num_atoms`, `fragments`, `rxn`, and optional quantum properties (`wB97x_6-31G(d).energy`, forces, atomization energy)
 - `positions` is the main supervised signal: an `N x 3` coordinate array for one structure
+
 
 What this means for modeling:
 - input condition: reactant + product coordinates (and atom identities)
@@ -185,10 +171,12 @@ What this means for modeling:
 - standard baseline initialization: midpoint `x0 = 0.5 * (xR + xP)`
 - evaluation question: does the predicted TS geometry reduce RMSD vs the midpoint baseline?
 
+**BONUS:** Teams can also make their implementation transferable to `Data/Halo8/` dataset. Note that the atom types in the Halo8 dataset may different slightly to the transition1x. 
+
 Concrete examples from the notebooks:
 - `Notebooks/example_baseline_reactOT.ipynb`:
   - shows keys like `dict_keys(['reactant', 'transition_state', 'product', ...])`
-  - picks a fixed atom-count subset (example run: most common `N=10`)
+  - picks a fixed atom-count subset (example run: most common `N=10`): **NOTE: Your code needs to be generic (i.e. transferable across all atom counts)** 
   - reports sample RMSD comparison (example run): midpoint->TS `0.4242`, predicted->TS `0.2174`
 - `Notebooks/example_halo8_reactOT_rmsd.ipynb`:
   - uses `Data/halo8_rpsb_like_all.pkl`
@@ -207,11 +195,11 @@ Expected output from code (what "good output" looks like):
 
 <img src="figures/transition1x.png" width="600">
 
-Figure X from the Transition1x paper: (a) is an example reaction from reactant to product through the transition state.
+Figure 4 from the Transition1x paper: (a) is an example reaction from reactant to product through the transition state.
 
 <img src="figures/halo8.png" width="600">
 
-Figure X from Halo8 paper: Reaction path sampling from single reactant to multiple products.
+Figure 1 from Halo8 paper: Reaction path sampling from single reactant to multiple products.
 
 
 Source papers / dataset links (to be added):
@@ -219,10 +207,9 @@ Source papers / dataset links (to be added):
 - Halo8: Paper: [https://doi.org/10.1038/s41597-025-05944-3] Dataset: [https://doi.org/10.5281/zenodo.16737590.]
 
 Fair-use / evaluation note:
-- Using these "smarter" TS guesses as training inputs or features is allowed only with a competition penalty.
+- Using these "smarter" TS guesses (other than `x0 = 0.5 * (xR + xP)`) as training inputs or features is allowed only with a competition penalty.
 - For fair model comparisons, report clearly whether your method uses any TS guess (`ts_guess-*` in `transition1x`) information beyond reactant/product inputs.
 
-TODO: Talk about why the Halo8 has more reactions.
 
 ## Visualization
 
@@ -241,9 +228,28 @@ Notebook highlights (from `Notebooks/xyz_visualization.ipynb`):
 uv sync --extra visualize
 ``` -->
 
+## Methods: Equivariant Graph Neural Network (EGNN)
+
+EGNNs are a class of neural networks designed specifically for modeling 3D molecular structures while respecting fundamental physical symmetries. Unlike standard graph neural networks, EGNNs ensure that predictions remain consistent under transformations that shouldn't affect the underlying physics.
+
+Why Equivariance Matters:
+1. Physics does not depend on coordinate frame: The laws of physics are invariant to translations, rotations, and permutations of atoms. A molecule's properties should remain the same regardless of how we orient or label it in space.
+2. The same molecule rotated should give the same prediction (up to rotation): If you rotate a molecule as input, the predicted properties (like transition-state coordinates) should transform accordingly, maintaining the relative geometry.
+3. NNs that respect physical symmetries: EGNNs explicitly enforce equivariance to translations, rotations, and permutations of atoms. This leads to more robust, data-efficient models that generalize better to unseen orientations and atom orderings.
+
+The examples have an implementation from scratch. You do not have to use those. There are pre-built packages for EGNN: [egnn-torch](https://github.com/lucidrains/egnn-pytorch). 
+
+[EGNN paper](https://arxiv.org/pdf/2102.09844)
+
+`Notebook/example_masking.ipynb` has a script that attempts to make the EGNN generalized for all atom count by using masking. 
+
+**Note:** You are not limited to EGNNs. Please feel free to use other methods upon convenience. 
+
 ## Methods: Conditional Flow Matching example
 
 There are several methods of predicting these transition-state (TS) structures. Some generative examples are diffusion models and conditional flow matching. Participants can also test non-generative methods to make predictions.
+
+**NOTE: You are not limited to using generative models. Any regression method is allowed**
 
 This repository uses conditional flow matching (CFM) to generate a TS geometry from reactant and product structures. Rather than predicting the TS in one step, the model learns a continuous update rule for coordinates over time.
 
@@ -298,7 +304,9 @@ The sample `.xyz` outputs used for inspection live in `sample_outputs_xyz/`.
   - Mean RMSD (lower is better)
   - % of reactions improved vs midpoint
 
-- **Goal:** outperform the midpoint baseline consistently
+**Note:** It could be useful to check if your molecules are aligned correctly before computing your RMSD. The RMSD function in `Code/Wrappers/metrics.py` has an implementation of the Kabsch alignment algorithm. 
+
+- **GOAL:** outperform the midpoint baseline (and other TS guesses) consistently. An excellent RMSD is 0.01.
 
 
 ## Repository Structure and How To Use Each Folder
