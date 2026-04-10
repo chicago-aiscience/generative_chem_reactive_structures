@@ -15,7 +15,7 @@ format, run a reference model, and develop improved methods for TS structure gen
 Participants in the hackathon are expected to:
 
 - Understand the reaction-structure data provided in this repository.
-- Use reactant and product geometries (transition1x dataset) to predict the corresponding transition-state structure.
+- Use reactant and product 3D geometries (transition1x dataset) to predict the corresponding transition-state 3D geometries.
 - Can start from the provided baselines and modify, replace, or extend them with their own approach.
 - Evaluate performance against shared metrics such as RMSD and comparison to midpoint-based baselines. Bonus for teams that achieve an RMSD score of lower than 0.01!
 - Clearly document any additional assumptions, features, or external information used in their method.
@@ -163,6 +163,7 @@ What you find in each reaction entry (as used in notebooks/scripts):
 - top-level keys: `reactant`, `product`, `transition_state`, `single_fragment`, `use_ind`, `ts_guess`, `ts_guess_sbv1`, `ts_guess_true`, `ts_guess_NEBCI-xtb`
 - per-structure keys (inside `reactant`/`product`/`transition_state`): `positions`, `charges` (or `atomic_numbers`), `num_atoms`, `fragments`, `rxn`, and optional quantum properties (`wB97x_6-31G(d).energy`, forces, atomization energy)
 - `positions` is the main supervised signal: an `N x 3` coordinate array for one structure
+- You could also use other properties (like energy, forces) to aid your predictions. Remember, the main task is to ONLY predict the TS 3D structure. 
 
 
 What this means for modeling:
