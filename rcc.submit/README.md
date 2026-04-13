@@ -15,10 +15,17 @@ Use `scp` to copy files:
 
 `scp -r [cnetid]@midway3.rcc.uchicago.edu:[rcc_path - source] [local_path - destination]`
 
+## 3. Interactive sessions 
 
-## 3. Submit and monitor batch jobs
+Please do not use the login node to run heavy calculations like model training. You would have to either enter an interactive node (explained here) or submit a batch job (next section) to perform any heavy computation. We have Schmidt GPUs reserved for all participants till April 28th
 
-To run multiple calculations (training/inference) on RCC:
+Use the following command to log into an interactive session. 
+
+`sinteractive --account=ai4s-hackathon --partition=ai4s-hackathon --reservation=ai4s-hackathon`
+
+## 4. Submit and monitor batch jobs
+
+To run multiple calculations (training/inference) on RCC and as an alternative to interactive sessions:
 
 1. SSH to Midway3 (or Midway2).
 2. `cd` to your project directory.
@@ -27,12 +34,19 @@ To run multiple calculations (training/inference) on RCC:
 5. Submit the job: `sbatch sub.sbatch`
 6. Track job status: `squeue -u [cnetid]`
 
+Use the following account, reservation, and partition to run these jobs (already entered in the `sub.sbatch` script)
+```
+#SBATCH --account=ai4s-hackathon  
+#SBATCH --reservation=ai4s-hackathon  
+#SBATCH --partition=ai4s-hackathon
+```
+
 More on `squeue` status/reason codes: https://docs.rcc.uchicago.edu/slurm/sbatch/?h=squeu#squeue-status-and-reason-codes
 
 General RCC job notes: https://docs.rcc.uchicago.edu/101/jobs/
 
 
-## 4. Launch a jupter lab session on an RCC compute node
+## 5. Launch a jupter lab session on an RCC compute node
 
 ### Via sbatch (recommended)
 

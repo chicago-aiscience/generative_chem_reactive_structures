@@ -4,8 +4,9 @@
 ##SBATCH --output=job.out
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=[ENTER YOUR EMAIL ADDRESS]
-#SBATCH --partition=schmidt-gpu
-#SBATCH --account=pi-dfreedman
+#SBATCH --account=ai4s-hackathon
+#SBATCH --reservation=ai4s-hackathon  
+#SBATCH --partition=ai4s-hackathon
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gres=gpu:1

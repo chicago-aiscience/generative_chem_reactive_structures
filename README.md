@@ -138,9 +138,9 @@ You can go through some example jupyter notebooks. There are many ways to run th
 
 Refer to `Notebooks/example_baseline.ipynb` for a working example.
 
-Other notebook examples:
+Other notebook examples. Both notebooks are just expanded versions of the `example_baseline.ipynb` with the functions written explicitly:
 - `Notebooks/example_baseline_reactOT.ipynb`
-- `Notebooks/example_halo8_reactOT_rmsd.ipynb`
+- `Notebooks/example_halo8_reactOT_rmsd.ipynb` (this is uses bonus dataset)
 <!--
 If needed, install notebook library:
 
