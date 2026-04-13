@@ -32,7 +32,7 @@ More on `squeue` status/reason codes: https://docs.rcc.uchicago.edu/slurm/sbatch
 General RCC job notes: https://docs.rcc.uchicago.edu/101/jobs/
 
 
-## 5. Launch a jupter lab session on an RCC compute node
+## 4. Launch a jupter lab session on an RCC compute node
 
 ### Via sbatch (recommended)
 
