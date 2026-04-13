@@ -164,6 +164,7 @@ What you find in each reaction entry (as used in notebooks/scripts):
 - per-structure keys (inside `reactant`/`product`/`transition_state`): `positions`, `charges` (or `atomic_numbers`), `num_atoms`, `fragments`, `rxn`, and optional quantum properties (`wB97x_6-31G(d).energy`, forces, atomization energy)
 - `positions` is the main supervised signal: an `N x 3` coordinate array for one structure
 - You could also use other properties (like energy, forces) to aid your predictions. Remember, the main task is to ONLY predict the TS 3D structure. 
+- You can refer to https://gitlab.com/matschreiner/Transition1x for additional details about the dataset. 
 
 
 What this means for modeling:
