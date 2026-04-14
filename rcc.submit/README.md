@@ -21,7 +21,13 @@ Please do not use the login node to run heavy calculations like model training. 
 
 Use the following command to log into an interactive session. 
 
-`sinteractive --account=ai4s-hackathon --partition=ai4s-hackathon --reservation=ai4s-hackathon`
+`sinteractive --account=ai4s-hackathon --partition=ai4s-hackathon --reservation=ai4s-hackathon --gres=gpu:1`
+
+Please use 1 GPU per group. Maybe 2. 
+
+Testing: `module load cuda`
+
+`nvidia-smi` - see if you get an output. 
 
 ## 4. Submit and monitor batch jobs
 
