@@ -1,6 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=jupyter-launch
-#SBATCH --account=[YOUR ACCOUNT NAME]
+#SBATCH --account=ai4s-hackathon
+#SBATCH --reservation=ai4s-hackathon  
+#SBATCH --partition=ai4s-hackathon
 #SBATCH --output=jupyter_logs/output-%J.txt
 #SBATCH --error=jupyter_logs/error-%J.txt
 #SBATCH --time=04:00:00
