@@ -23,4 +23,4 @@ conda activate /project/ai4s-hackathon/ai-sci-hackathon-2026/hackathon-base-mini
 
 module load cuda
 
-python train_and_eval_egnn.py   --pkl Data/transition1x/train.pkl   --atom-count 10   --epochs 3   --train-samples 200   --eval-samples 100   --out-dir outputs_xyz
+python Code/Examples/train_and_eval_egnn.py   --pkl Data/transition1x/train.pkl   --atom-count 10   --epochs 3   --train-samples 200   --eval-samples 100   --out-dir outputs_xyz/
