@@ -60,7 +60,7 @@ Run these commands once after the shell configuration above to create a virtual 
 module load python/miniforge-25.3.0
 
 # 2. Activate the shared hackathon conda environment
-conda activate /project/ai4s-hackathon/ai-sci-hackathon-2026/hackathon-base
+conda activate /project/ai4s-hackathon/ai-sci-hackathon-2026/hackathon-base-miniforge
 
 # 3. Create your personal virtual environment in your home directory
 python -m venv --system-site-packages ~/my-hack-venv
